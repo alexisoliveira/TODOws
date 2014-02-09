@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoWSWCF", "ToDoWSWCF\ToDoWSWCF.csproj", "{171292BF-4D43-4910-B963-E47FAF03B07B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoWSWCFData", "ToDoWSWCFData\ToDoWSWCFData\ToDoWSWCFData.csproj", "{2FB9FDA8-73B0-4770-BEB2-5C6D953A2D68}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{171292BF-4D43-4910-B963-E47FAF03B07B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{171292BF-4D43-4910-B963-E47FAF03B07B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{171292BF-4D43-4910-B963-E47FAF03B07B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{171292BF-4D43-4910-B963-E47FAF03B07B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FB9FDA8-73B0-4770-BEB2-5C6D953A2D68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FB9FDA8-73B0-4770-BEB2-5C6D953A2D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FB9FDA8-73B0-4770-BEB2-5C6D953A2D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FB9FDA8-73B0-4770-BEB2-5C6D953A2D68}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,5 +1,0 @@
-C:\Documents and Settings\4015932\Meus documentos\Visual Studio 2010\Projects\JSONWebService\JSONWebService\bin\JSONWebService.dll
-C:\Documents and Settings\4015932\Meus documentos\Visual Studio 2010\Projects\JSONWebService\JSONWebService\bin\JSONWebService.pdb
-C:\Documents and Settings\4015932\Meus documentos\Visual Studio 2010\Projects\JSONWebService\JSONWebService\obj\Debug\ResolveAssemblyReference.cache
-C:\Documents and Settings\4015932\Meus documentos\Visual Studio 2010\Projects\JSONWebService\JSONWebService\obj\Debug\JSONWebService.dll
-C:\Documents and Settings\4015932\Meus documentos\Visual Studio 2010\Projects\JSONWebService\JSONWebService\obj\Debug\JSONWebService.pdb

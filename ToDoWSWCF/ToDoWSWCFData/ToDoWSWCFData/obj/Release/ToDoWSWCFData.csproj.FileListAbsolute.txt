@@ -1,0 +1,4 @@
+C:\Users\Alexis Oliveira\Documents\Visual Studio 2012\Projects\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\bin\Release\ToDoWSWCFData.dll
+C:\Users\Alexis Oliveira\Documents\Visual Studio 2012\Projects\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\bin\Release\ToDoWSWCFData.pdb
+C:\Users\Alexis Oliveira\Documents\Visual Studio 2012\Projects\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\obj\Release\ToDoWSWCFData.dll
+C:\Users\Alexis Oliveira\Documents\Visual Studio 2012\Projects\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\obj\Release\ToDoWSWCFData.pdb

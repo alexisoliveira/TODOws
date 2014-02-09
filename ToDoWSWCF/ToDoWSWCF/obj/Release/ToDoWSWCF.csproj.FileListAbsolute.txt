@@ -1,0 +1,7 @@
+C:\Users\Alexis Oliveira\documents\visual studio 2012\Projects\ToDoWSWCF\ToDoWSWCF\bin\ToDoWSWCF.dll
+C:\Users\Alexis Oliveira\documents\visual studio 2012\Projects\ToDoWSWCF\ToDoWSWCF\bin\ToDoWSWCF.pdb
+C:\Users\Alexis Oliveira\documents\visual studio 2012\Projects\ToDoWSWCF\ToDoWSWCF\obj\Release\ToDoWSWCF.csprojResolveAssemblyReference.cache
+C:\Users\Alexis Oliveira\documents\visual studio 2012\Projects\ToDoWSWCF\ToDoWSWCF\obj\Release\ToDoWSWCF.dll
+C:\Users\Alexis Oliveira\documents\visual studio 2012\Projects\ToDoWSWCF\ToDoWSWCF\obj\Release\ToDoWSWCF.pdb
+C:\Users\Alexis Oliveira\documents\visual studio 2012\Projects\ToDoWSWCF\ToDoWSWCF\bin\ToDoWSWCFData.dll
+C:\Users\Alexis Oliveira\documents\visual studio 2012\Projects\ToDoWSWCF\ToDoWSWCF\bin\ToDoWSWCFData.pdb
