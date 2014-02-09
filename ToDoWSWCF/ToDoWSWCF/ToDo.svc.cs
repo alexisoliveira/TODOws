@@ -44,7 +44,7 @@ namespace ToDoWSWCF
                 string dsDenha = "1312313";
                  */
 
-                DataTable dttUsuario = new DAO().ObterUsuario(nrTelefone, dsDenha);
+                DataTable dttUsuario = DAO.ObterUsuario(nrTelefone, dsDenha);
                 if (dttUsuario.Rows.Count > 0)
                 {
                     state = new SessionState();
@@ -68,7 +68,7 @@ namespace ToDoWSWCF
         #endregion
 
         #region GetTarefas
-        public List<Tarefa> GetTarefas()
+        public Tarefa[] GetTarefas()
         {
             if (HttpContext.Current.Session["SessionState"] == null)
             {
@@ -77,7 +77,7 @@ namespace ToDoWSWCF
             else
             {
                 SessionState state = (SessionState)HttpContext.Current.Session["SessionState"];
-                return new DAO().ObterTarefas(state.idUsuario);
+                return DAO.ObterTarefas(state.idUsuario).ToArray();
             }
         }
         #endregion
@@ -96,7 +96,7 @@ namespace ToDoWSWCF
         /// </remarks>
         /// <param name="tarefa"></param>
         /// <returns></returns>
-        public bool Sincronizar(List<Tarefa> tarefa)
+        public bool Sincronizar(Stream stream)
         {
             if (HttpContext.Current.Session["SessionState"] == null)
             {
@@ -106,6 +106,10 @@ namespace ToDoWSWCF
             {
                 try
                 {
+                    NameValueCollection coll = HttpUtility.ParseQueryString(new StreamReader(stream).ReadToEnd());
+                    string nome = coll["nome"];
+                    string email = coll["email"];
+                    string idade = coll["idade"];
 
                     return true;
                 }
@@ -135,6 +139,34 @@ namespace ToDoWSWCF
             else
             {
                 return true;
+            }
+        }
+        #endregion
+
+        #region InserirUsuario
+        /// <summary>
+        /// Método responsável por inserir usuário no servidor
+        /// </summary>
+        /// <remarks>
+        /// Criado por: Alexis de A. Oliveira
+        /// Data: 09/02/2014
+        /// </remarks>
+        /// <returns></returns>
+        public bool InserirUsuario(Stream stream)
+        {
+            try
+            {
+                NameValueCollection coll = HttpUtility.ParseQueryString(new StreamReader(stream).ReadToEnd());
+                string nrTelefone = coll["nrTelefone"];
+                string dsSenha = coll["dsSenha"];
+                string dsEmail = coll["dsEmail"];
+
+                DAO.InserirUsuario(nrTelefone, dsSenha, dsEmail);
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
         #endregion

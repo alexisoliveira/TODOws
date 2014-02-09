@@ -5,3 +5,10 @@ c:\users\alexis oliveira\documents\visual studio 2012\Projects\ToDoWSWCF\ToDoWSW
 c:\users\alexis oliveira\documents\visual studio 2012\Projects\ToDoWSWCF\ToDoWSWCF\obj\Debug\ToDoWSWCF.pdb
 C:\Users\Alexis Oliveira\documents\visual studio 2012\Projects\ToDoWSWCF\ToDoWSWCF\bin\ToDoWSWCFData.dll
 C:\Users\Alexis Oliveira\documents\visual studio 2012\Projects\ToDoWSWCF\ToDoWSWCF\bin\ToDoWSWCFData.pdb
+C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCF\bin\ToDoWSWCF.dll
+C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCF\bin\ToDoWSWCF.pdb
+C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCF\bin\ToDoWSWCFData.dll
+C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCF\bin\ToDoWSWCFData.pdb
+C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCF\obj\Debug\ToDoWSWCF.csprojResolveAssemblyReference.cache
+C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCF\obj\Debug\ToDoWSWCF.dll
+C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCF\obj\Debug\ToDoWSWCF.pdb

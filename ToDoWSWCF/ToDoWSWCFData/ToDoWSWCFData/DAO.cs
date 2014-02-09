@@ -5,17 +5,18 @@ using System.Web;
 using AcessoDados;
 using System.Collections;
 using System.Data;
+using ToDoWSWCFData;
 
 namespace ToDoWSWCF
 {
-    public class DAO
+    public static class DAO
     {
         #region ObterTarefas
         /// <summary>
         /// Obtém as tarefas do usuário
         /// </summary>
         /// <param name="cdUsuario"></param>
-        public List<Tarefa> ObterTarefas(int cdUsuario)
+        public static List<Tarefa> ObterTarefas(int cdUsuario)
         {
             Hashtable htParametro = new Hashtable();
             htParametro["@id_usuario"] = cdUsuario;
@@ -49,15 +50,46 @@ namespace ToDoWSWCF
         /// </summary>
         /// <param name="nrTelefone"></param>
         /// <param name="dsSenha"></param>
-        public DataTable ObterUsuario(string nrTelefone, string dsSenha)
+        public static DataTable ObterUsuario(string nrTelefone, string dsSenha)
         {
             Hashtable htParametro = new Hashtable();
             htParametro["@nr_telefone"] = nrTelefone;
-            htParametro["@ds_senha"] = dsSenha;
+            htParametro["@ds_senha"] = Util.GetMD5Hash(dsSenha);
 
             string sql = @"select * from tb_usuario (nolock) where nr_telefone = @nr_telefone and ds_senha = @ds_senha";
 
             return FabricaConexao.ExecuteQuery(sql, htParametro);
+        }
+        #endregion
+
+        #region InserirUsuario
+        /// <summary>
+        /// Efetua o cadastro de um usuário
+        /// </summary>
+        /// <param name="nrTelefone"></param>
+        /// <param name="dsSenha"></param>
+        public static void InserirUsuario(string nrTelefone, string dsSenha, string dsEmail)
+        {
+            Hashtable htParametro = new Hashtable();
+            htParametro["@nr_telefone"] = nrTelefone;
+            htParametro["@ds_senha"] = Util.GetMD5Hash(dsSenha);
+            htParametro["@ds_email"] = dsEmail;
+
+            string sql = @"
+                            insert into tb_usuario
+                            (
+	                            ds_email
+	                            ,nr_telefone
+	                            ,ds_senha
+                            )
+                            values
+                            (
+	                            @ds_email
+	                            ,@nr_telefone
+	                            ,@ds_senha
+                            )";
+
+            FabricaConexao.ExecuteNonQuery(sql, htParametro, false);
         }
         #endregion
     }

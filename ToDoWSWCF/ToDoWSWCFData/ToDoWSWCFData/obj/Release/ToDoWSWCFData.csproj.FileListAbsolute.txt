@@ -2,3 +2,8 @@ C:\Users\Alexis Oliveira\Documents\Visual Studio 2012\Projects\ToDoWSWCF\ToDoWSW
 C:\Users\Alexis Oliveira\Documents\Visual Studio 2012\Projects\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\bin\Release\ToDoWSWCFData.pdb
 C:\Users\Alexis Oliveira\Documents\Visual Studio 2012\Projects\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\obj\Release\ToDoWSWCFData.dll
 C:\Users\Alexis Oliveira\Documents\Visual Studio 2012\Projects\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\obj\Release\ToDoWSWCFData.pdb
+C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\bin\Release\ToDoWSWCFData.dll
+C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\bin\Release\ToDoWSWCFData.pdb
+C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\obj\Release\ToDoWSWCFData.csprojResolveAssemblyReference.cache
+C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\obj\Release\ToDoWSWCFData.dll
+C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\obj\Release\ToDoWSWCFData.pdb
