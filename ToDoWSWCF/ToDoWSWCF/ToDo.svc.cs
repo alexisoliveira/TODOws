@@ -11,6 +11,7 @@ using System.ServiceModel.Activation;
 using System.Data;
 using System.IO;
 using System.Collections.Specialized;
+using ToDoWSWCFData;
 
 
 namespace ToDoWSWCF
@@ -70,14 +71,27 @@ namespace ToDoWSWCF
         #region GetTarefas
         public Tarefa[] GetTarefas()
         {
-            if (HttpContext.Current.Session["SessionState"] == null)
+            try
             {
-                return null;
+                Log.registrarEvento("INICIO - METODO GET TAREFA");
+                if (HttpContext.Current.Session["SessionState"] == null)
+                {
+                    Log.registrarEvento("SESSAO INVALIDA");
+                    return null;
+                }
+                else
+                {
+                    SessionState state = (SessionState)HttpContext.Current.Session["SessionState"];
+                    Tarefa[] tarefa = DAO.ObterTarefas(state.idUsuario).ToArray();
+
+                    Log.registrarEvento("FIM - METODO GET TAREFA");
+                    return tarefa;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                SessionState state = (SessionState)HttpContext.Current.Session["SessionState"];
-                return DAO.ObterTarefas(state.idUsuario).ToArray();
+                Log.registrarEvento("ERRO: " + ex.Message);
+                return null;
             }
         }
         #endregion
@@ -152,20 +166,34 @@ namespace ToDoWSWCF
         /// Data: 09/02/2014
         /// </remarks>
         /// <returns></returns>
-        public bool InserirUsuario(Stream stream)
+        public bool CadastrarUsuario(Usuario usuario)
         {
             try
             {
+                Log.registrarEvento("INICIO - METODO INSERIR USUARIO");
+                
+                /*
                 NameValueCollection coll = HttpUtility.ParseQueryString(new StreamReader(stream).ReadToEnd());
                 string nrTelefone = coll["nrTelefone"];
+
+                Log.registrarEvento("PARAM"+ nrTelefone);
+
                 string dsSenha = coll["dsSenha"];
+
+                Log.registrarEvento("PARAM" + dsSenha);
+
                 string dsEmail = coll["dsEmail"];
 
+                Log.registrarEvento("PARAM" + dsEmail);
                 DAO.InserirUsuario(nrTelefone, dsSenha, dsEmail);
+
+                Log.registrarEvento("FIM - METODO INSERIR USUARIO");
+                 */ 
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
+                Log.registrarEvento("ERRO: " + ex.Message);
                 return false;
             }
         }

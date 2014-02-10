@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 
 
-namespace ToDoWSWCF
+namespace ToDoWSWCFData
 {
     public class SessionState
     {

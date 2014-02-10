@@ -6,7 +6,7 @@ using System.Text;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace AcessoDados
+namespace ToDoWSWCFData
 {
     public class FabricaConexao
     {

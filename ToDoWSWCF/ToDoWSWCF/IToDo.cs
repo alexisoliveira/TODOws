@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using ToDoWSWCFData;
 
 namespace ToDoWSWCF
 {
@@ -29,9 +30,13 @@ namespace ToDoWSWCF
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "verificarsessao")]
         bool VerificarSessao();
 
+        //[OperationContract]
+        //[WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "cadastrarusuario")]        
+        //bool CadastrarUsuario(Stream stream);
+
         [OperationContract]
-        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "inserirusuario")]
-        bool InserirUsuario(Stream stream);
+        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "cadastrarusuario")]        
+        bool CadastrarUsuario(Usuario usuario);
 
     }
 }

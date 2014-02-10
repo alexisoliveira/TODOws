@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using AcessoDados;
 using System.Collections;
 using System.Data;
 using ToDoWSWCFData;
 
-namespace ToDoWSWCF
+namespace ToDoWSWCFData
 {
     public static class DAO
     {

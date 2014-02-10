@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ToDoWSWCF
+namespace ToDoWSWCFData
 {
     /// <summary>
     /// Criado por Alexis de A. oliveira
