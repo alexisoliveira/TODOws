@@ -12,6 +12,7 @@ using System.Data;
 using System.IO;
 using System.Collections.Specialized;
 using ToDoWSWCFData;
+using System.Web.Script.Serialization;
 
 
 namespace ToDoWSWCF
@@ -20,56 +21,34 @@ namespace ToDoWSWCF
     public class ToDo : IToDo
     {
         #region EfetuarLogin
-        /// <summary>
-        /// Este método é responsável por realizar o login do usuário e criar uma sessão para que seja possível 
-        /// a utilização das demais funções do webservice.
-        /// </summary>
-        /// <remarks>
-        /// Criado por: Alexis de A. Oliveira
-        /// Data: 07/02/2014
-        /// </remarks>
-        /// <param name="usuario"></param>
-        /// <param name="senha"></param>
-        /// <returns></returns>        
-        public bool EfetuarLogin(string login, string senha)
+        public bool EfetuarLogin(Stream stream)
         {
+            Log.registrarEvento("INICIO - METODO EFETUAR LOGIN");
             SessionState state = (SessionState)HttpContext.Current.Session["SessionState"];
-            if (state == null)
+
+            NameValueCollection coll = HttpUtility.ParseQueryString(new StreamReader(stream).ReadToEnd());
+            string usuario = coll["usuario"];
+            Usuario usuarioObj = new JavaScriptSerializer().Deserialize<Usuario>(usuario);
+
+            DataTable dttUsuario = DAO.ObterUsuario(usuarioObj.Telefone, usuarioObj.Senha);
+            if (dttUsuario.Rows.Count > 0)
             {
-
-                string nrTelefone = login;
-                string dsDenha = senha;
-
-                /*
-                string nrTelefone = "7999999999";
-                string dsDenha = "1312313";
-                 */
-
-                DataTable dttUsuario = DAO.ObterUsuario(nrTelefone, dsDenha);
-                if (dttUsuario.Rows.Count > 0)
-                {
-                    state = new SessionState();
-                    state.idUsuario = Convert.ToInt32(dttUsuario.Rows[0]["id_usuario"]);
-                    state.SessionId = HttpContext.Current.Session.SessionID;
-                    HttpContext.Current.Session["SessionState"] = state;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                state = new SessionState();
+                state.idUsuario = Convert.ToInt32(dttUsuario.Rows[0]["id_usuario"]);
+                state.SessionId = HttpContext.Current.Session.SessionID;
+                HttpContext.Current.Session["SessionState"] = state;
+                Log.registrarEvento("FIM - METODO EFETUAR LOGIN");
+                return true;
 
             }
-            else
-            {
-                HttpContext.Current.Session.Clear();
-                return false;
-            }
+            Log.registrarEvento("FIM - METODO EFETUAR LOGIN");
+            return false;
         }
+
         #endregion
 
         #region GetTarefas
-        public Tarefa[] GetTarefas()
+        public List<Tarefa> GetTarefas()
         {
             try
             {
@@ -82,7 +61,7 @@ namespace ToDoWSWCF
                 else
                 {
                     SessionState state = (SessionState)HttpContext.Current.Session["SessionState"];
-                    Tarefa[] tarefa = DAO.ObterTarefas(state.idUsuario).ToArray();
+                    List<Tarefa> tarefa = DAO.ObterTarefas(state.idUsuario);
 
                     Log.registrarEvento("FIM - METODO GET TAREFA");
                     return tarefa;
@@ -97,19 +76,6 @@ namespace ToDoWSWCF
         #endregion
 
         #region Sincronizar
-        /// <summary>
-        /// Este método receberá a lista de tarefas com o FL_SINCRONIZADO = 0
-        /// e o WS deverá verificar o FL_OPERACAO para realizar as seguintes operações:
-        ///     FL_OPERACAO = 'E' => excluir dados da base do servidor
-        ///     FL_OPERACAO = 'A' => alterar dados na base do servidor
-        ///     FL_OPERACAO = 'I' => incluir dados na base do servidor             
-        /// </summary>
-        /// <remarks>
-        /// Criado por: Alexis de A. Oliveira
-        /// Data: 07/02/2014
-        /// </remarks>
-        /// <param name="tarefa"></param>
-        /// <returns></returns>
         public bool Sincronizar(Stream stream)
         {
             if (HttpContext.Current.Session["SessionState"] == null)
@@ -136,14 +102,6 @@ namespace ToDoWSWCF
         #endregion
 
         #region VerificarSessao
-        /// <summary>
-        /// Verifica se o usuário possui uma sessão ativa
-        /// </summary>
-        /// <remarks>
-        /// Criado por: Alexis de A. Oliveira
-        /// Data: 07/02/2014
-        /// </remarks>
-        /// <returns></returns>
         public bool VerificarSessao()
         {
             if (HttpContext.Current.Session["SessionState"] == null)
@@ -157,41 +115,30 @@ namespace ToDoWSWCF
         }
         #endregion
 
-        #region InserirUsuario
-        /// <summary>
-        /// Método responsável por inserir usuário no servidor
-        /// </summary>
-        /// <remarks>
-        /// Criado por: Alexis de A. Oliveira
-        /// Data: 09/02/2014
-        /// </remarks>
-        /// <returns></returns>
-        public bool CadastrarUsuario(Usuario usuario)
+        #region CadastrarAtualizarUsuario
+        public bool CadastrarAtualizarUsuario(Stream stream)
         {
             try
             {
-                Log.registrarEvento("INICIO - METODO INSERIR USUARIO");
-                
-                /*
+                Log.registrarEvento("INICIO - METODO CADASTRAR/ATUALIZAR USUARIO");
                 NameValueCollection coll = HttpUtility.ParseQueryString(new StreamReader(stream).ReadToEnd());
-                string nrTelefone = coll["nrTelefone"];
+                string usuario = coll["usuario"];
+                Usuario usuarioObj = new JavaScriptSerializer().Deserialize<Usuario>(usuario);
 
-                Log.registrarEvento("PARAM"+ nrTelefone);
+                DataTable dttUsuario = DAO.ObterUsuario(usuarioObj.Telefone);
+                if (dttUsuario.Rows.Count > 0)//Atualizar
+                {
+                    DAO.AtualizarUsuario(usuarioObj.Telefone, usuarioObj.Senha, usuarioObj.Email);
+                }
+                else //Cadastrar
+                {
+                    DAO.CadastrarUsuario(usuarioObj.Telefone, usuarioObj.Senha, usuarioObj.Email);
+                }
 
-                string dsSenha = coll["dsSenha"];
-
-                Log.registrarEvento("PARAM" + dsSenha);
-
-                string dsEmail = coll["dsEmail"];
-
-                Log.registrarEvento("PARAM" + dsEmail);
-                DAO.InserirUsuario(nrTelefone, dsSenha, dsEmail);
-
-                Log.registrarEvento("FIM - METODO INSERIR USUARIO");
-                 */ 
+                Log.registrarEvento("FIM - METODO CADASTRAR/ATUALIZAR USUARIO");
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.registrarEvento("ERRO: " + ex.Message);
                 return false;

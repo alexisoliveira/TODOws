@@ -12,7 +12,7 @@ namespace ToDoWSWCFData
     
     public class Usuario
     {
-        public int IdUsuario { set; get; }
+        public int Id { set; get; }
         public string Email { set; get; }
         public string Telefone { set; get; }
         public string Senha { set; get; }

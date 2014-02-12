@@ -11,10 +11,6 @@ namespace ToDoWSWCFData
     public static class DAO
     {
         #region ObterTarefas
-        /// <summary>
-        /// Obtém as tarefas do usuário
-        /// </summary>
-        /// <param name="cdUsuario"></param>
         public static List<Tarefa> ObterTarefas(int cdUsuario)
         {
             Hashtable htParametro = new Hashtable();
@@ -44,11 +40,6 @@ namespace ToDoWSWCFData
         #endregion
 
         #region ObterUsuario
-        /// <summary>
-        /// Efetuar o login do usuário
-        /// </summary>
-        /// <param name="nrTelefone"></param>
-        /// <param name="dsSenha"></param>
         public static DataTable ObterUsuario(string nrTelefone, string dsSenha)
         {
             Hashtable htParametro = new Hashtable();
@@ -61,18 +52,49 @@ namespace ToDoWSWCFData
         }
         #endregion
 
-        #region InserirUsuario
-        /// <summary>
-        /// Efetua o cadastro de um usuário
-        /// </summary>
-        /// <param name="nrTelefone"></param>
-        /// <param name="dsSenha"></param>
-        public static void InserirUsuario(string nrTelefone, string dsSenha, string dsEmail)
+        #region ObterUsuario
+        public static DataTable ObterUsuario(string nrTelefone)
         {
             Hashtable htParametro = new Hashtable();
             htParametro["@nr_telefone"] = nrTelefone;
-            htParametro["@ds_senha"] = Util.GetMD5Hash(dsSenha);
-            htParametro["@ds_email"] = dsEmail;
+
+            string sql = @"select * from tb_usuario (nolock) where nr_telefone = @nr_telefone";
+
+            return FabricaConexao.ExecuteQuery(sql, htParametro);
+        }
+        #endregion
+
+        #region CadastrarUsuario
+        public static void CadastrarUsuario(string nrTelefone, string dsSenha, string dsEmail)
+        {
+            Hashtable htParametro = new Hashtable();
+
+            if (nrTelefone != null)
+            {
+                htParametro["@nr_telefone"] = nrTelefone;
+            }
+            else
+            {
+                htParametro["@nr_telefone"] = string.Empty;
+            }
+
+            if (dsSenha != null)
+            {
+                htParametro["@ds_senha"] = Util.GetMD5Hash(dsSenha);
+            }
+            else
+            {
+                htParametro["@ds_senha"] = string.Empty;
+            }
+
+            if (dsEmail != null)
+            {
+                htParametro["@ds_email"] = dsEmail;
+            }
+            else
+            {
+                htParametro["@ds_email"] = string.Empty;
+            }
 
             string sql = @"
                             insert into tb_usuario
@@ -87,6 +109,49 @@ namespace ToDoWSWCFData
 	                            ,@nr_telefone
 	                            ,@ds_senha
                             )";
+
+            FabricaConexao.ExecuteNonQuery(sql, htParametro, false);
+        }
+        #endregion
+
+        #region AtualizarUsuario
+        public static void AtualizarUsuario(string nrTelefone, string dsSenha, string dsEmail)
+        {
+            Hashtable htParametro = new Hashtable();
+            if (nrTelefone != null)
+            {
+                htParametro["@nr_telefone"] = nrTelefone;
+            }
+            else
+            {
+                htParametro["@nr_telefone"] = string.Empty;
+            }
+
+            if (dsSenha != null)
+            {
+                htParametro["@ds_senha"] = Util.GetMD5Hash(dsSenha);
+            }
+            else
+            {
+                htParametro["@ds_senha"] = string.Empty;
+            }
+
+            if (dsEmail != null)
+            {
+                htParametro["@ds_email"] = dsEmail;
+            }
+            else
+            {
+                htParametro["@ds_email"] = string.Empty;
+            }
+
+            string sql = @"
+                            update tb_usuario
+                            set 
+                                ds_email = @ds_email,
+                                ds_senha = @ds_senha
+                            where nr_telefone = @nr_telefone
+                            ";
 
             FabricaConexao.ExecuteNonQuery(sql, htParametro, false);
         }
