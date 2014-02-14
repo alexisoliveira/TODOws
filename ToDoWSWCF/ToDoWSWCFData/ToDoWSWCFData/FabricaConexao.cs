@@ -10,7 +10,7 @@ namespace ToDoWSWCFData
 {
     public class FabricaConexao
     {
-        private static SqlConnection  AbrirConexao()
+        public static SqlConnection  AbrirConexao()
         {
             string conexao = String.Format(@"Server=5258ab4c-e9a4-4d26-b163-a2c9012a3ec7.sqlserver.sequelizer.com;Database=db5258ab4ce9a44d26b163a2c9012a3ec7;User ID=jntszfuasqubjhrk;Password=r8yrwk7pqdLxvbGMH3hxaDtJZULnxnfGeursCkijFDA2HxMQekABksyVNXzJGSYc;");     
             SqlConnection conn = new SqlConnection(conexao);
@@ -20,7 +20,7 @@ namespace ToDoWSWCFData
             return conn;
         }
 
-        private static void FecharConexao(SqlConnection conn)
+        public static void FecharConexao(SqlConnection conn)
         {
             conn.Close();
         }
@@ -36,7 +36,7 @@ namespace ToDoWSWCFData
                 IDictionaryEnumerator dic = htParametro.GetEnumerator();
                 while (dic.MoveNext())
                 {
-                    command.Parameters.Add(dic.Key.ToString(), dic.Value.ToString());
+                    command.Parameters.AddWithValue(dic.Key.ToString(), dic.Value.ToString());
                 }
             }
 
@@ -69,7 +69,7 @@ namespace ToDoWSWCFData
                     IDictionaryEnumerator dic = htParametro.GetEnumerator();
                     while (dic.MoveNext())
                     {
-                        command.Parameters.Add(dic.Key.ToString(), dic.Value.ToString());
+                        command.Parameters.AddWithValue(dic.Key.ToString(), dic.Value.ToString());
                     }
                 }
 
@@ -84,6 +84,33 @@ namespace ToDoWSWCFData
             catch
             {
                 trans.Rollback();
+                FecharConexao(conn);
+                throw new Exception();
+            }
+
+            FecharConexao(conn);
+
+        }
+
+        public static void ExecuteNonQuery(string sql, Hashtable htParametro, SqlTransaction trans)
+        {
+            SqlConnection conn = AbrirConexao();
+            try
+            {
+                SqlCommand command = new SqlCommand(sql, conn, trans);
+                if (htParametro != null)
+                {
+                    IDictionaryEnumerator dic = htParametro.GetEnumerator();
+                    while (dic.MoveNext())
+                    {
+                        command.Parameters.AddWithValue(dic.Key.ToString(), dic.Value.ToString());
+                    }
+                }
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                command.ExecuteNonQuery();
+            }
+            catch
+            {
                 FecharConexao(conn);
                 throw new Exception();
             }

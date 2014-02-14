@@ -6,3 +6,4 @@ C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCFData\ToDoWSW
 C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\bin\Debug\ToDoWSWCFData.pdb
 C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\obj\Debug\ToDoWSWCFData.dll
 C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\obj\Debug\ToDoWSWCFData.pdb
+C:\Users\Alexis Oliveira\Documents\GitHub\TODOws\ToDoWSWCF\ToDoWSWCFData\ToDoWSWCFData\obj\Debug\ToDoWSWCFData.csprojResolveAssemblyReference.cache

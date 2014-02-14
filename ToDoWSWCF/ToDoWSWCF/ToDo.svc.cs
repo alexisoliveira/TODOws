@@ -23,28 +23,40 @@ namespace ToDoWSWCF
         #region EfetuarLogin
         public bool EfetuarLogin(Stream stream)
         {
-            Log.registrarEvento("INICIO - METODO EFETUAR LOGIN");
-            SessionState state = (SessionState)HttpContext.Current.Session["SessionState"];
-
-            NameValueCollection coll = HttpUtility.ParseQueryString(new StreamReader(stream).ReadToEnd());
-            string usuario = coll["usuario"];
-            Usuario usuarioObj = new JavaScriptSerializer().Deserialize<Usuario>(usuario);
-
-            DataTable dttUsuario = DAO.ObterUsuario(usuarioObj.Telefone, usuarioObj.Senha);
-            if (dttUsuario.Rows.Count > 0)
+            try
             {
-                state = new SessionState();
-                state.idUsuario = Convert.ToInt32(dttUsuario.Rows[0]["id_usuario"]);
-                state.SessionId = HttpContext.Current.Session.SessionID;
-                HttpContext.Current.Session["SessionState"] = state;
+                Log.registrarEvento("INICIO - METODO EFETUAR LOGIN");
+                SessionState state = (SessionState)HttpContext.Current.Session["SessionState"];
+
+                NameValueCollection coll = HttpUtility.ParseQueryString(new StreamReader(stream).ReadToEnd());
+                string usuario = coll["usuario"];
+                Usuario usuarioObj = new JavaScriptSerializer().Deserialize<Usuario>(usuario);
+
+                DataTable dttUsuario = DAO.ObterUsuario(usuarioObj.Telefone, usuarioObj.Senha);
+                if (dttUsuario.Rows.Count > 0)
+                {
+                    state = new SessionState();
+                    state.idUsuario = Convert.ToInt32(dttUsuario.Rows[0]["id_usuario"]);
+                    state.SessionId = HttpContext.Current.Session.SessionID;
+                    HttpContext.Current.Session["SessionState"] = state;
+                    Log.registrarEvento("FIM - METODO EFETUAR LOGIN");
+                    return true;
+
+                }
+                else
+                {
+                    HttpContext.Current.Session.Clear();
+                }
                 Log.registrarEvento("FIM - METODO EFETUAR LOGIN");
-                return true;
-
+                return false;
             }
-            Log.registrarEvento("FIM - METODO EFETUAR LOGIN");
-            return false;
+            catch (Exception ex)
+            {
+                Log.registrarEvento("ERRO: " + ex.Message);
+                HttpContext.Current.Session.Clear();
+                return false;
+            }
         }
-
         #endregion
 
         #region GetTarefas
@@ -78,6 +90,7 @@ namespace ToDoWSWCF
         #region Sincronizar
         public bool Sincronizar(Stream stream)
         {
+            Log.registrarEvento("INICIO - METODO Sincronizar");
             if (HttpContext.Current.Session["SessionState"] == null)
             {
                 return false;
@@ -87,14 +100,15 @@ namespace ToDoWSWCF
                 try
                 {
                     NameValueCollection coll = HttpUtility.ParseQueryString(new StreamReader(stream).ReadToEnd());
-                    string nome = coll["nome"];
-                    string email = coll["email"];
-                    string idade = coll["idade"];
+                    string listaTarefa = coll["listaTarefa"];
+                    List<Tarefa> listaTarefaObj = new JavaScriptSerializer().Deserialize<List<Tarefa>>(listaTarefa);
 
-                    return true;
+                    Log.registrarEvento("FIM - METODO Sincronizar");
+                    return DAO.SincronizarTarefas(listaTarefaObj);
                 }
-                catch
+                catch(Exception ex)
                 {
+                    Log.registrarEvento("ERRO: " + ex.Message);
                     return false;
                 }
             }

@@ -5,6 +5,7 @@ using System.Web;
 using System.Collections;
 using System.Data;
 using ToDoWSWCFData;
+using System.Data.SqlClient;
 
 namespace ToDoWSWCFData
 {
@@ -24,12 +25,11 @@ namespace ToDoWSWCFData
             foreach (DataRow dr in dtt.Rows)
             {
                 Tarefa t = new Tarefa();
-                t.IdServer = Convert.ToInt32(dr["id_server"]);
-                t.IdLocal = Convert.ToInt32(dr["id_local"]);
-                //t.IdUsuario = Convert.ToInt32(dr["id_usuario"]);
-                t.Descricao = dr["descricao"].ToString();
+                t.Id = Convert.ToInt32(dr["id"]);
+                t.Id_usuario = Convert.ToInt32(dr["id_usuario"]);
+                t.Nome = dr["descricao"].ToString();
                 t.Observacao = dr["observacao"].ToString();
-                t.Data = Convert.ToDateTime(dr["data"]);
+                t.DataFinalizacao = dr["data"].ToString();
                 t.Notificar = Convert.ToBoolean(dr["notificar"]);
 
                 retorno.Add(t);
@@ -154,6 +154,218 @@ namespace ToDoWSWCFData
                             ";
 
             FabricaConexao.ExecuteNonQuery(sql, htParametro, false);
+        }
+        #endregion
+
+        #region SincronizarTarefas
+        public static bool SincronizarTarefas(List<Tarefa> listaTarefa)
+        {
+            SqlConnection conn = FabricaConexao.AbrirConexao();
+            SqlTransaction trans = null;
+            try
+            {
+                trans = conn.BeginTransaction();
+                foreach (Tarefa t in listaTarefa)
+                {
+                    /*
+                        Verificar se a tarefa existe na base do servidor pelo idLocal da tarefa e o id_usuario
+                        Caso exista atualizar a tarefa
+                        Caso não exista deverá ser feita inclusão da tarefa
+                    */
+                    if (ObterTarefa(t.Id_usuario, t.Id).Rows.Count > 0)
+                    {
+                        AlterarTarefa(t, trans);
+                    }
+                    else
+                    {
+                        InserirTarefa(t, trans);
+                    }
+                }
+                trans.Commit();
+
+            }
+            catch(Exception ex)
+            {
+                trans.Rollback();
+                FabricaConexao.FecharConexao(conn);
+                throw new Exception(ex.Message);
+            }
+
+            FabricaConexao.FecharConexao(conn);
+            return true;
+        }
+        #endregion
+
+        #region InserirTarefa
+        public static void InserirTarefa(Tarefa f, SqlTransaction trans)
+        {
+
+            Hashtable htParametro = new Hashtable();
+
+            if (f.Id_usuario != null)
+            {
+                htParametro["@id_usuario"] = f.Id_usuario;
+            }
+            else
+            {
+                htParametro["@id_usuario"] = string.Empty;
+            }
+
+            if (f.Id != null)
+            {
+                htParametro["@id_local"] = f.Id;
+            }
+            else
+            {
+                htParametro["@id_local"] = string.Empty;
+            }
+
+            if (f.Notificar != null)
+            {
+                htParametro["@notificar"] = f.Notificar;
+            }
+            else
+            {
+                htParametro["@notificar"] = string.Empty;
+            }
+
+            if (f.DataFinalizacao != null)
+            {
+                htParametro["@data"] = f.DataFinalizacao;
+            }
+            else
+            {
+                htParametro["@data"] = string.Empty;
+            }
+
+            if (f.Observacao != null)
+            {
+                htParametro["@observacao"] = f.Observacao;
+            }
+            else
+            {
+                htParametro["@observacao"] = string.Empty;
+            }
+
+            if (f.Nome != null)
+            {
+                htParametro["@descricao"] = f.Nome;
+            }
+            else
+            {
+                htParametro["@descricao"] = string.Empty;
+            }
+
+            string sql = @"
+                            insert into tb_tarefa
+                             (
+	                             id_local
+	                            ,id_usuario
+	                            ,descricao
+	                            ,observacao
+	                            ,data
+	                            ,notificar
+                            )
+                            values
+                            (
+	                             @id_local
+	                            ,@id_usuario
+	                            ,@descricao
+	                            ,@observacao
+	                            ,@data
+	                            ,@notificar
+                            )
+                            ";
+            FabricaConexao.ExecuteNonQuery(sql, htParametro, trans);
+        }
+        #endregion
+
+        #region AlterarTarefa
+        public static void AlterarTarefa(Tarefa f, SqlTransaction trans)
+        {
+            Hashtable htParametro = new Hashtable();
+
+            if (f.Id_usuario != null)
+            {
+                htParametro["@id_usuario"] = f.Id_usuario;
+            }
+            else
+            {
+                htParametro["@id_usuario"] = string.Empty;
+            }
+
+            if (f.Id != null)
+            {
+                htParametro["@id_local"] = f.Id;
+            }
+            else
+            {
+                htParametro["@id_local"] = string.Empty;
+            }
+
+            if (f.Notificar != null)
+            {
+                htParametro["@notificar"] = f.Notificar;
+            }
+            else
+            {
+                htParametro["@notificar"] = string.Empty;
+            }
+
+            if (f.DataFinalizacao != null)
+            {
+                htParametro["@data"] = f.DataFinalizacao;
+            }
+            else
+            {
+                htParametro["@data"] = string.Empty;
+            }
+
+            if (f.Observacao != null)
+            {
+                htParametro["@observacao"] = f.Observacao;
+            }
+            else
+            {
+                htParametro["@observacao"] = string.Empty;
+            }
+
+            if (f.Nome != null)
+            {
+                htParametro["@descricao"] = f.Nome;
+            }
+            else
+            {
+                htParametro["@descricao"] = string.Empty;
+            }
+
+            string sql = @"
+                           update tb_tarefa
+                            set
+	                             descricao = @descricao
+	                            ,observacao = @observacao
+	                            ,data = @data
+	                            ,notificar = @notificar
+                            where 
+                             id_local = @id_local
+                             and id_usuario = @id_usuario
+                            ";
+            FabricaConexao.ExecuteNonQuery(sql, htParametro, trans);
+        }
+        #endregion
+
+        #region ObterTarefa
+        public static DataTable ObterTarefa(int cdUsuario, int idLocal)
+        {
+            Hashtable htParametro = new Hashtable();
+            htParametro["@id_usuario"] = cdUsuario;
+            htParametro["@idLocal"] = idLocal;
+
+            string sql = @"select * from tb_tarefa (nolock) where id_usuario = @id_usuario and id = @idLocal";
+
+            DataTable dtt = FabricaConexao.ExecuteQuery(sql, htParametro);
+
+            return dtt;
         }
         #endregion
     }

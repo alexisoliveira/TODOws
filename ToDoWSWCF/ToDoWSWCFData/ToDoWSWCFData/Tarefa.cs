@@ -11,11 +11,12 @@ namespace ToDoWSWCFData
     /// </summary>
     public class Tarefa
     {
-        public int IdServer { set; get; }
-        public int IdLocal { set; get; }
-        public string Descricao { set; get; }
+        public int Id { set; get; }
+        public string Nome { set; get; }
         public string Observacao { set; get; }
-        public DateTime Data { set; get; }
+        public string DataFinalizacao { set; get; }
         public bool Notificar { set; get; }
+        public bool Status { set; get; }
+        public int Id_usuario { set; get; }
     }
 }
