@@ -81,20 +81,20 @@ namespace ToDoWSWCFData
                     trans.Commit();
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 trans.Rollback();
                 FecharConexao(conn);
-                throw new Exception();
+                throw new Exception(ex.Message);
             }
 
             FecharConexao(conn);
 
         }
 
-        public static void ExecuteNonQuery(string sql, Hashtable htParametro, SqlTransaction trans)
+        public static void ExecuteNonQuery(string sql, Hashtable htParametro, SqlTransaction trans, SqlConnection conn)
         {
-            SqlConnection conn = AbrirConexao();
+            
             try
             {
                 SqlCommand command = new SqlCommand(sql, conn, trans);
@@ -109,14 +109,11 @@ namespace ToDoWSWCFData
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 command.ExecuteNonQuery();
             }
-            catch
+            catch(Exception ex)
             {
                 FecharConexao(conn);
-                throw new Exception();
+                throw new Exception(ex.Message);
             }
-
-            FecharConexao(conn);
-
         }
     }
 }

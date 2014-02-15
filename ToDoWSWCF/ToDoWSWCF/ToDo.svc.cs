@@ -39,12 +39,15 @@ namespace ToDoWSWCF
                     state.idUsuario = Convert.ToInt32(dttUsuario.Rows[0]["id_usuario"]);
                     state.SessionId = HttpContext.Current.Session.SessionID;
                     HttpContext.Current.Session["SessionState"] = state;
+
+                    Log.registrarEvento("Login efetuado com sucesso: "+ state.SessionId);
                     Log.registrarEvento("FIM - METODO EFETUAR LOGIN");
                     return true;
 
                 }
                 else
                 {
+                    Log.registrarEvento("Nao foi possivel realizar o login");
                     HttpContext.Current.Session.Clear();
                 }
                 Log.registrarEvento("FIM - METODO EFETUAR LOGIN");
@@ -90,27 +93,29 @@ namespace ToDoWSWCF
         #region Sincronizar
         public bool Sincronizar(Stream stream)
         {
-            Log.registrarEvento("INICIO - METODO Sincronizar");
-            if (HttpContext.Current.Session["SessionState"] == null)
+            try
             {
-                return false;
-            }
-            else
-            {
-                try
-                {
-                    NameValueCollection coll = HttpUtility.ParseQueryString(new StreamReader(stream).ReadToEnd());
-                    string listaTarefa = coll["listaTarefa"];
-                    List<Tarefa> listaTarefaObj = new JavaScriptSerializer().Deserialize<List<Tarefa>>(listaTarefa);
+                Log.registrarEvento("INICIO - METODO Sincronizar");
+                NameValueCollection coll = HttpUtility.ParseQueryString(new StreamReader(stream).ReadToEnd());
+                string listaTarefa = coll["listaTarefa"];
+                string usuario = coll["usuario"];
+                List<Tarefa> listaTarefaObj = new JavaScriptSerializer().Deserialize<List<Tarefa>>(listaTarefa);
+                Usuario usuarioObj = new JavaScriptSerializer().Deserialize<Usuario>(usuario);
 
-                    Log.registrarEvento("FIM - METODO Sincronizar");
-                    return DAO.SincronizarTarefas(listaTarefaObj);
-                }
-                catch(Exception ex)
+                bool resultado = DAO.SincronizarTarefas(listaTarefaObj, usuarioObj);
+
+                if (resultado)
                 {
-                    Log.registrarEvento("ERRO: " + ex.Message);
-                    return false;
+                    Log.registrarEvento("Sincronização realizada com sucesso. Qtd= " + listaTarefaObj.Count);
                 }
+
+                Log.registrarEvento("FIM - METODO Sincronizar");
+                return resultado;
+            }
+            catch (Exception ex)
+            {
+                Log.registrarEvento("ERRO: " + ex.Message);
+                return false;
             }
         }
         #endregion

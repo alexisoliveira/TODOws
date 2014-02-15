@@ -25,7 +25,7 @@ namespace ToDoWSWCFData
             foreach (DataRow dr in dtt.Rows)
             {
                 Tarefa t = new Tarefa();
-                t.Id = Convert.ToInt32(dr["id"]);
+                t.Id = Convert.ToInt32(dr["id_local"]);
                 t.Id_usuario = Convert.ToInt32(dr["id_usuario"]);
                 t.Nome = dr["descricao"].ToString();
                 t.Observacao = dr["observacao"].ToString();
@@ -158,31 +158,36 @@ namespace ToDoWSWCFData
         #endregion
 
         #region SincronizarTarefas
-        public static bool SincronizarTarefas(List<Tarefa> listaTarefa)
+        public static bool SincronizarTarefas(List<Tarefa> listaTarefa, Usuario usuario)
         {
             SqlConnection conn = FabricaConexao.AbrirConexao();
             SqlTransaction trans = null;
             try
             {
                 trans = conn.BeginTransaction();
-                foreach (Tarefa t in listaTarefa)
+                DataTable dttUsuario = ObterUsuario(usuario.Telefone, usuario.Senha);
+                if (dttUsuario.Rows.Count > 0)
                 {
-                    /*
-                        Verificar se a tarefa existe na base do servidor pelo idLocal da tarefa e o id_usuario
-                        Caso exista atualizar a tarefa
-                        Caso não exista deverá ser feita inclusão da tarefa
-                    */
-                    if (ObterTarefa(t.Id_usuario, t.Id).Rows.Count > 0)
+                    foreach (Tarefa t in listaTarefa)
                     {
-                        AlterarTarefa(t, trans);
-                    }
-                    else
-                    {
-                        InserirTarefa(t, trans);
+                        t.Id_usuario = Convert.ToInt32(dttUsuario.Rows[0]["id_usuario"]);
+
+                        if (ObterTarefa(t.Id_usuario, t.Id).Rows.Count > 0)
+                        {
+                            AlterarTarefa(t, trans, conn);
+                        }
+                        else
+                        {
+                            InserirTarefa(t, trans, conn);
+                        }
                     }
                 }
+                else
+                {
+                    throw new Exception("Inconsistência de dados.");
+                }
                 trans.Commit();
-
+                FabricaConexao.FecharConexao(conn);
             }
             catch(Exception ex)
             {
@@ -197,7 +202,7 @@ namespace ToDoWSWCFData
         #endregion
 
         #region InserirTarefa
-        public static void InserirTarefa(Tarefa f, SqlTransaction trans)
+        public static void InserirTarefa(Tarefa f, SqlTransaction trans, SqlConnection conn)
         {
 
             Hashtable htParametro = new Hashtable();
@@ -254,6 +259,15 @@ namespace ToDoWSWCFData
             else
             {
                 htParametro["@descricao"] = string.Empty;
+            }
+
+            if (f.Status != null)
+            {
+                htParametro["@status"] = f.Status;
+            }
+            else
+            {
+                htParametro["@status"] = string.Empty;
             }
 
             string sql = @"
@@ -265,6 +279,7 @@ namespace ToDoWSWCFData
 	                            ,observacao
 	                            ,data
 	                            ,notificar
+                                ,status
                             )
                             values
                             (
@@ -274,14 +289,15 @@ namespace ToDoWSWCFData
 	                            ,@observacao
 	                            ,@data
 	                            ,@notificar
+                                ,@status
                             )
                             ";
-            FabricaConexao.ExecuteNonQuery(sql, htParametro, trans);
+            FabricaConexao.ExecuteNonQuery(sql, htParametro, trans, conn);
         }
         #endregion
 
         #region AlterarTarefa
-        public static void AlterarTarefa(Tarefa f, SqlTransaction trans)
+        public static void AlterarTarefa(Tarefa f, SqlTransaction trans, SqlConnection conn)
         {
             Hashtable htParametro = new Hashtable();
 
@@ -339,6 +355,15 @@ namespace ToDoWSWCFData
                 htParametro["@descricao"] = string.Empty;
             }
 
+            if (f.Status != null)
+            {
+                htParametro["@status"] = f.Status;
+            }
+            else
+            {
+                htParametro["@status"] = string.Empty;
+            }
+
             string sql = @"
                            update tb_tarefa
                             set
@@ -346,11 +371,12 @@ namespace ToDoWSWCFData
 	                            ,observacao = @observacao
 	                            ,data = @data
 	                            ,notificar = @notificar
+                                ,status = @status
                             where 
                              id_local = @id_local
                              and id_usuario = @id_usuario
                             ";
-            FabricaConexao.ExecuteNonQuery(sql, htParametro, trans);
+            FabricaConexao.ExecuteNonQuery(sql, htParametro, trans, conn);
         }
         #endregion
 
@@ -361,7 +387,7 @@ namespace ToDoWSWCFData
             htParametro["@id_usuario"] = cdUsuario;
             htParametro["@idLocal"] = idLocal;
 
-            string sql = @"select * from tb_tarefa (nolock) where id_usuario = @id_usuario and id = @idLocal";
+            string sql = @"select * from tb_tarefa (nolock) where id_usuario = @id_usuario and id_local = @idLocal";
 
             DataTable dtt = FabricaConexao.ExecuteQuery(sql, htParametro);
 
